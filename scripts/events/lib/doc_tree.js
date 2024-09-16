@@ -145,10 +145,16 @@ module.exports = ctx => {
         sections.push(sec)
       }
       if (others.length > 0 && others.filter(p => p.title?.length > 0).length > 0) {
-        sections.push({
-          title: '...',
-          pages: others.sort((p1, p2) => p1.title - p2.title)
-        })
+        // 检查是否已经存在分类
+        if (sections.length === 0) {
+          sections.push({
+            title: '未分类',  // 或者您可以使用其他更合适的标题
+            pages: others.sort((p1, p2) => p1.title.localeCompare(p2.title))
+          })
+        } else {
+          // 如果已经存在分类，就将未分类的页面添加到第一个分类中
+          sections[0].pages = sections[0].pages.concat(others.sort((p1, p2) => p1.title.localeCompare(p2.title)))
+        }
       }
     } else {
       // 自动设置顺序
